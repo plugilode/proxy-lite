@@ -1,0 +1,52 @@
+name: Newsletter Registration Workflow
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'  # Runs daily at 2:00 AM UTC
+
+jobs:
+  newsletter-registration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Set up environment and install dependencies
+        run: |
+          uv venv --python 3.11 --python-preference managed
+          uv sync
+          uv pip install -e .
+          .venv/bin/playwright install
+
+      - name: Run Proxy Lite workflow for Google
+        run: |
+          source .venv/bin/activate
+          .venv/bin/proxy "1. Go to https://www.google.com. 2. Search for 'handyladen mit newsletter registrierung'. 3. For each search result on the first page: a. Visit the website. b. Look for a newsletter registration form. c. Fill in the form with: - Name: max plugilo - Email: newsletter@plugilo.com - Fill all other required fields and checkboxes with random valid values. d. Submit the form (click register/send/etc). e. Wait for a confirmation message. f. Log the result (success/failure, confirmation message, URL). g. Go back to the search results and repeat for the next result. Stop after all results on the first page are processed. Summarize the results at the end." | tee google_log.txt
+
+      - name: Run Proxy Lite workflow for Bing
+        run: |
+          source .venv/bin/activate
+          .venv/bin/proxy "1. Go to https://www.bing.com. 2. Search for 'handyladen mit newsletter registrierung'. 3. For each search result on the first page: a. Visit the website. b. Look for a newsletter registration form. c. Fill in the form with: - Name: max plugilo - Email: newsletter@plugilo.com - Fill all other required fields and checkboxes with random valid values. d. Submit the form (click register/send/etc). e. Wait for a confirmation message. f. Log the result (success/failure, confirmation message, URL). g. Go back to the search results and repeat for the next result. Stop after all results on the first page are processed. Summarize the results at the end." | tee bing_log.txt
+
+      - name: Run Proxy Lite workflow for Yahoo
+        run: |
+          source .venv/bin/activate
+          .venv/bin/proxy "1. Go to https://search.yahoo.com. 2. Search for 'handyladen mit newsletter registrierung'. 3. For each search result on the first page: a. Visit the website. b. Look for a newsletter registration form. c. Fill in the form with: - Name: max plugilo - Email: newsletter@plugilo.com - Fill all other required fields and checkboxes with random valid values. d. Submit the form (click register/send/etc). e. Wait for a confirmation message. f. Log the result (success/failure, confirmation message, URL). g. Go back to the search results and repeat for the next result. Stop after all results on the first page are processed. Summarize the results at the end." | tee yahoo_log.txt
+
+      - name: Upload logs as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: newsletter-logs
+          path: |
+            google_log.txt
+            bing_log.txt
+            yahoo_log.txt 
