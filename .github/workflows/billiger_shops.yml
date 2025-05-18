@@ -1,0 +1,39 @@
+name: Billiger.de Shop Scraper
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'  # Runs daily at 3:00 AM UTC
+
+jobs:
+  scrape-billiger-shops:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Set up environment and install dependencies
+        run: |
+          uv venv --python 3.11 --python-preference managed
+          uv sync
+          uv pip install -e .
+          .venv/bin/playwright install
+
+      - name: Run billiger.de shop scraper
+        run: |
+          source .venv/bin/activate
+          python src/proxy_lite/tools/billiger_shop_scraper.py
+
+      - name: Upload CSV as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: billiger-shops-csv
+          path: billiger_shops.csv 
