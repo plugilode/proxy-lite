@@ -1,0 +1,15 @@
+omegaconf>=2.3.0
+openai>=1.61.1
+opencv-python>=4.11.0.86
+opencv-python-headless>=4.11.0.86
+playwright-stealth>=1.0.6
+playwright>=1.50.0
+pydantic>=2.10.6
+rich>=13.9.4
+setuptools>=75.8.0
+tenacity>=9.0.0
+streamlit>=1.40.2
+pre-commit>=4.1.0
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.5.1+cpu
+torchvision==0.20.1+cpu

@@ -5,6 +5,7 @@ description = "Proxy Lite - A mini, open-weights, version of the Convergence AI 
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "antlr4-python3-runtime>=4.9.0,<4.10.0",
     "omegaconf>=2.3.0",
     "openai>=1.61.1",
     "opencv-python>=4.11.0.86",
